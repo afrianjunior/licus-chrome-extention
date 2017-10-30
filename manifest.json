@@ -11,14 +11,14 @@
     "scripts": ["background.js"]
   },
   "chrome_url_overrides": {
-    "newtab": "popup.html"
+    "newtab": "home.html"
   },
   "content_scripts": [
     {
       "matches": [
         "<all_urls>"
       ],
-      "js": ["content.js"]
+      "js": ["vue.runtime.js" ,"content.js"]
     }
   ],
   "optional_permissions": [ "tabs", "http://www.google.com/" ],
