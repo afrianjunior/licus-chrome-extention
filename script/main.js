@@ -5,7 +5,7 @@ const Opening = (c, self) => {
       c("div", {attrs: {class: "tag-bottom"}}, self.home.tagTwo),
       c("div", {
         on: {
-          click: self.hello
+          click: self.toLogin
         },
         attrs: {
           class: 'btn btn-login'
@@ -17,9 +17,6 @@ const Opening = (c, self) => {
       c("div", {attrs: {class: "tag-top up"}}, self.home.tagOne),
       c("div", {attrs: {class: "tag-bottom up"}}, self.home.tagTwo),
       c("input", {
-        on: {
-          click: self.hello
-        },
         attrs: {
           type: 'password',
           class: 'input-login'
@@ -32,6 +29,7 @@ const Opening = (c, self) => {
 new Vue({
   data: () => {
     return {
+      page: 'home',
       home: {
         tagOne: 'Keep Strong',
         tagTwo: 'Broh!',
@@ -43,15 +41,17 @@ new Vue({
     }
   },
   render (c) {
-    return c("div", {}, [
-      Opening(c, this)
-    ])
+    if (this.page === 'home') {
+      return c("div", {}, [
+        Opening(c, this)
+      ])
+    }
   },
   mounted () {
     
   },
   methods: {
-    hello() {
+    toLogin(val) {
       this.login.process = 'toLogin'
     }
   }
