@@ -8,22 +8,23 @@
     "default_icon": "icon.png"
   },
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["script/background.js"]
   },
   "chrome_url_overrides": {
-    "newtab": "home.html"
+    "newtab": "index.html"
   },
   "content_scripts": [
     {
       "matches": [
         "<all_urls>"
       ],
-      "js": ["vue.runtime.js" ,"content.js"]
+      "js": ["script/vue.runtime.js" ,"script/content.js"]
     }
   ],
   "optional_permissions": [ "tabs", "http://www.google.com/" ],
   "permissions": [
     "tabs",
-    "storage"
+    "storage",
+    "history"
   ]
 }
