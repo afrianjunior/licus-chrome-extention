@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:300,400,800');
+
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: 'Raleway', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.opening {
+    width: 200px;
+    font-size: 30px;
+    color: rgba(0, 0, 0, .4);
+    transition: all .3s ease;
+    position: relative;
+    top: 0;
+}
+
+.tag-top {
+    transition: all .3s ease;
+    position: relative;
+    top: 0px;
+}
+
+.tag-bottom {
+    transition: all .3s ease;
+    font-weight: 800;
+    position: relative;
+    top: 0px;
+}
+
+.up {
+    top: -30px;
+}
+
+.btn {
+    font-size: 13px;
+    text-align: center;
+    padding: .352rem .652rem;
+    border: 1px solid rgba(0, 0, 0, .4);
+    margin-top: 20px;
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 4px;
+}
+
+.btn-login {
+    font-size: 12px;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: .352rem .652rem;
+    outline: none;
+    color: rgba(0, 0, 0, .4);
+    border: 1px solid rgba(0, 0, 0, .4);
+    border-radius: 4px;
+}
