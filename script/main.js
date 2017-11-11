@@ -1,10 +1,19 @@
-const Canva = (c, self) => {
-
+const firstTime = (c, self) => {
+  const lg = self.config.language
+  return c("div", { attrs: { class: "first-page" } }, [
+    c("div", { attrs: { class: "heading"} }, self.text.firstOpening),
+    c("input", { 
+      attrs: {
+        type: "text",
+        placeholder: self.text.phFirstOpening
+      }
+     }, self.home.name )
+  ])
 }
 
 const Opening = (c, self) => {
   if (self.login.process === 'none') {
-    return c("div", {attrs: {class: "opening"}}, [
+    return c("div", { attrs: { class: "opening" } }, [
       c("div", {attrs: {class: "tag-top"}}, self.home.tagOne),
       c("div", {attrs: {class: "tag-bottom"}}, self.home.tagTwo),
       c("div", {
@@ -17,7 +26,7 @@ const Opening = (c, self) => {
       }, self.home.btn)
     ])
   } else if (self.login.process === 'toLogin') {
-    return c("div", {attrs: {class: "opening open-login"}}, [
+    return c("div", { attrs: { class: "opening open-login" } }, [
       c("div", {attrs: {class: "tag-top up"}}, self.home.tagOne),
       c("div", {attrs: {class: "tag-bottom up"}}, self.home.tagTwo),
       c("input", {
@@ -34,10 +43,21 @@ new Vue({
   data: () => {
     return {
       page: 'home',
+      config: {
+        language: 'en',
+        text: {
+          en: {
+            firstOpening: 'first time? please let me know about you',
+            phFirstOpening: 'your name'
+          }
+        }
+      },
+      text: {},
       home: {
         tagOne: 'Keep Strong',
         tagTwo: 'Broh!',
-        btn: 'Login'
+        btn: 'Login',
+        name: ''
       },
       data: {
         first: true,
@@ -58,22 +78,32 @@ new Vue({
     }
   },
   render (c) {
-    if (this.page === 'home') {
+    if (this.data.first) {
       return c("div", {attrs: {class: "canva"}}, [
-        Opening(c, this)
+        firstTime(c, this)
       ])
-    } else if (this.page === 'toLogin') {
-      return c("div", {attrs: {class: "canva gradi"}}, [
-        Opening(c, this)
-      ])
+    } else {
+      if (this.page === 'home') {
+        return c("div", {attrs: {class: "canva"}}, [
+          Opening(c, this)
+        ])
+      } else if (this.page === 'toLogin') {
+        return c("div", {attrs: {class: "canva gradi"}}, [
+          Opening(c, this)
+        ])
+      }
     }
   },
   mounted () {
-    var self = this;
-    this.initChange();
-    this.checkLogin();
+    var self = this
+    this.initChange()
+    this.checkLogin()
+    this.initLanguage()
   },
   methods: {
+    hasOwnProp(a, b) {
+      return Object.prototype.hasOwnProperty.call(a, b)
+    },
     checkLogin() {
       var self = this;
       chrome.cookies.get({
@@ -98,6 +128,16 @@ new Vue({
           })
         }
       })
+    },
+    initLanguage() {
+      const lg = this.config.language
+      const confText = this.config.text
+
+      const checkLanguage = this.hasOwnProp(confText, lg)
+
+      if (checkLanguage) {
+        this.text = this.config.text[lg]
+      }
     },
     initChange() {
       chrome.cookies.onChanged.addListener((res) => {
