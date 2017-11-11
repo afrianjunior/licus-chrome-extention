@@ -225,10 +225,10 @@ new Vue({
     },
     saveSetting() {
       const name  = this.data.settings.name
-      const passwd = btoa(this.data.settings.password)
+      const password = btoa(this.data.settings.password)
       const setting = JSON.stringify({
         name,
-        passwd
+        password
       })
 
       chrome.cookies.set({ 
@@ -236,7 +236,15 @@ new Vue({
         name: 'setting',
         value: setting
       }, () => {
-        console.log('save!')
+        this.data.first = false
+        this.page = 'home'
+        chrome.cookies.set({ 
+          url : 'http://junior.dev',
+          name: 'first',
+          value: "false"
+        }, () => {
+          
+        })
       })
     },
     initLanguage() {
@@ -250,11 +258,23 @@ new Vue({
       }
     },
     initChange() {
+      var self = this
       chrome.cookies.onChanged.addListener((res) => {
         if (res.cookie.domain === 'junior.dev') {
-          console.log(res)
+          const name = res.cookie.name
+          const value = res.cookie.value
+
+          if (name === 'setting') {
+            self.updateSetting(value)
+          }
         }
       });
+    },
+    updateSetting(str) {
+      const toObj = JSON.parse(str)
+      toObj.password = atob(toObj.password)
+
+      this.data.settings = toObj
     },
     toLogin(val) {
       var self = this;
