@@ -4,8 +4,8 @@ body {
     margin: 0;
     height: 100vh;
     font-family: 'Raleway', sans-serif;
-    
-}
+    color: rgba(255, 255, 255, .6);
+}   
 
 .canva {
     transition: all .6s ease;
@@ -28,6 +28,17 @@ body {
 .gradi {
     filter: hue-rotate(-19deg);
 }
+
+.heading {
+    font-size: 40px;
+    margin-bottom: 50px;
+}
+
+.first-page {
+    width: 80%;
+    text-align: center;
+}
+
 .opening {
     transition: all .6s ease;
     width: 200px;
@@ -73,17 +84,30 @@ body {
     font-size: 12px;
 }
 
-input[type="text"],
-input[type="password"] {
+input[type="password"],
+input[type="text"] {
     color: white;
     background: rgba(255, 255, 255, .1);
     padding: .352rem .652rem;
     outline: none;
-    color: rgba(0, 0, 0, .4);
+    padding: .6em 1em;
     border: 1px solid rgba(255, 255, 255, .6);
     border-radius: 4px;
 }
 
-input[type="password"] {
+input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: white;
+  }
+input::-moz-placeholder { /* Firefox 19+ */
+    color: white;
+  }
+input:-ms-input-placeholder { /* IE 10+ */
+    color: white;
+  }
+input:-moz-placeholder { /* Firefox 18- */
+    color: white;
+  }
+
+.text-center {
     text-align: center;
 }
