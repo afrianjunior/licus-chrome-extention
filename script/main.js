@@ -1,14 +1,69 @@
 const firstTime = (c, self) => {
   const lg = self.config.language
-  return c("div", { attrs: { class: "first-page" } }, [
-    c("div", { attrs: { class: "heading"} }, self.text.firstOpening),
-    c("input", { 
-      attrs: {
-        type: "text",
-        placeholder: self.text.phFirstOpening
-      }
-     }, self.home.name )
-  ])
+  if (self.page === 'welcome') {
+    return c("div", { attrs: { class: "first-page" } }, [
+      c("div", { attrs: { class: "heading"} }, self.text.firstOpening),
+      c("input", { 
+        domProps: {
+          value: self.data.settings.name
+        },
+        on: {
+          input(e) {
+            const value  = e.target.value
+            self.data.settings.name = value
+          },
+          keyup(e) {
+            if (e.shiftKey || e.keyCode === 13) {
+              const val = self.data.settings.name
+              if (val) {
+                if (self.textValidation(val)) {
+                  self.page = "setPass"
+                }
+              }
+            }
+          }
+        },
+        attrs: {
+          class: 'text-center',
+          type: "text",
+          placeholder: self.text.phFirstOpening
+        }
+       }, self.home.name )
+    ])
+  } else if (self.page === 'setPass') {
+    return c("div", { attrs: { class: "first-page" } }, [
+      c("div", { attrs: { class: "heading"} }, self.text.setPassOpening),
+      c("input", { 
+        domProps: {
+          value: self.data.settings.password
+        },
+        on: {
+          input(e) {
+            const value  = e.target.value
+            self.data.settings.password = value
+          },
+          keyup(e) {
+            if (e.shiftKey || e.keyCode === 13) {
+              const passVal = self.data.settings.password
+              if (passVal) {
+                const val = self.data.settings.password
+                if (val) {
+                  if (self.textValidation(val)) {
+                    self.saveSetting()
+                  }
+                }
+              }
+            }
+          }
+        },
+        attrs: {
+          class: 'text-center',
+          type: "password",
+          placeholder: self.text.phSetPass
+        }
+       }, self.home.name )
+    ])
+  }
 }
 
 const Opening = (c, self) => {
@@ -31,6 +86,7 @@ const Opening = (c, self) => {
       c("div", {attrs: {class: "tag-bottom up"}}, self.home.tagTwo),
       c("input", {
         attrs: {
+          class: 'text-center',
           type: 'password',
           class: 'input-login'
         }
@@ -48,7 +104,9 @@ new Vue({
         text: {
           en: {
             firstOpening: 'first time? please let me know about you',
-            phFirstOpening: 'your name'
+            phFirstOpening: 'your name',
+            setPassOpening: 'can you give me passcode for security?',
+            phSetPass: 'your passcode',
           }
         }
       },
@@ -63,7 +121,8 @@ new Vue({
         first: true,
         login: false,
         settings: {
-          password: '1234'
+          name: '',
+          password: ''
         },
         todos: [
           {
@@ -97,12 +156,47 @@ new Vue({
   mounted () {
     var self = this
     this.initChange()
-    this.checkLogin()
-    this.initLanguage()
+    this.checkFirst()
   },
   methods: {
     hasOwnProp(a, b) {
       return Object.prototype.hasOwnProperty.call(a, b)
+    },
+    textValidation(val) {
+      const filterSpace = val.replace(/\s/g, '');
+      if (val && filterSpace === '') {
+        return false
+      } else {
+        return true
+      }
+    },
+    checkFirst() {
+      var self = this;
+      chrome.cookies.get({
+        url : 'http://junior.dev',
+        name: 'first'
+      }, (res) => {
+        if (res !== null) {
+          if (res.value == "false") {
+            self.data.first = false
+            self.checkLogin()
+          } else if (res.value == "true") {
+            self.page = 'welcome'
+            self.data.first = true
+          }
+        } else if (res === null) {
+          self.page = 'welcome'
+          self.data.first = true
+          chrome.cookies.set({ 
+            url : 'http://junior.dev',
+            name: 'first',
+            value: "true"
+          }, () => {
+            console.log('init!')
+          })
+        }
+        self.initLanguage()
+      })
     },
     checkLogin() {
       var self = this;
@@ -127,6 +221,22 @@ new Vue({
             console.log('init!')
           })
         }
+      })
+    },
+    saveSetting() {
+      const name  = this.data.settings.name
+      const passwd = btoa(this.data.settings.password)
+      const setting = JSON.stringify({
+        name,
+        passwd
+      })
+
+      chrome.cookies.set({ 
+        url : 'http://junior.dev',
+        name: 'setting',
+        value: setting
+      }, () => {
+        console.log('save!')
       })
     },
     initLanguage() {
