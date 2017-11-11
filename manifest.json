@@ -25,6 +25,9 @@
   "permissions": [
     "tabs",
     "storage",
-    "history"
+    "history",
+    "cookies",
+    "http://junior.dev/",
+    "unlimitedStorage"
   ]
 }
